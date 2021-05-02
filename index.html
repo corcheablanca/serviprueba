@@ -22,10 +22,10 @@
       const $map = document.querySelector("#map");
       const map = new window.google.maps.Map($map, {
         center: {
-          lat: 0,
-          lng: 0,
+          lat: 37.09024,
+          lng: -95.712891,
         },
-        zoom: 3
+        zoom: 4
       })
 
       renderData()
@@ -35,25 +35,36 @@
           return data
       }
 
- //esto no esta funcionando creo que esta mal parseado el json de la api//     
-      async function renderData() {
 
+ //esta funcion ubica las ciudades y sus marcadores, adicionalmente parsea el json paso a paso//     
+
+      const popup = new window.google.maps.Infowindow() //instancia del infowindow//
+
+      async function renderData() {
         const data = await getData()
         console.log(data)
-        data.forEach(item => {
-         new window.google.maps.Marker({
-            position: {
-                lat: item.location.latitude,
-                lng: item.location.longitude,
-            },
-        
-            map
+        const n =(data["data"])
+        console.log("imprimeinedo n"+ n)
+        console.log("imprmiendo n sub cero "+ n[0])
+        console.log(n[0].latitude)
 
+        n.forEach(item => {
+         const marker = new window.google.maps.Marker({
+             position:{
+                 lat:item.latitude,
+                 lng:item.longitude,
+             },
+             map
+         })
+         marker.addListener('click',() => {
+             
+            popup.open(map, marker)
+         })   
         })
-       })
-      }
+       
+        
+        }
 
     </script>
-
 </body>      
 </html>
