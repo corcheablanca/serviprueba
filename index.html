@@ -17,15 +17,17 @@
 <body>
     <div id="map" class="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaHJW423r_DZxaPPT5RLrto3UvAFWBhwo"></script>
-    <script>
-   
+
+    <script type="module">
+      import styles from './style.js'
       const $map = document.querySelector("#map");
       const map = new window.google.maps.Map($map, {
         center: {
           lat: 37.09024,
           lng: -95.712891,
         },
-        zoom: 4
+        zoom: 4,
+        styles
       })
 
       renderData()
@@ -38,7 +40,22 @@
 
  //esta funcion ubica las ciudades y sus marcadores, adicionalmente parsea el json paso a paso//     
 
-      const popup = new window.google.maps.Infowindow() //instancia del infowindow//
+      const popup = new window.google.maps.InfoWindow() //instancia del infowindow//
+
+
+      function renderLables({confirmed, dead, recovered, location }){
+          return `
+          <div>
+            <p> <strong> ${location} </strong> </p>
+            <p> confirmados: ${confirmed} </p>
+            <p> muertes: ${dead} </p>
+            <p> recuperados: ${recovered} </p>
+          </div>
+          `
+         
+                
+          
+      }
 
       async function renderData() {
         const data = await getData()
@@ -47,23 +64,35 @@
         console.log("imprimeinedo n"+ n)
         console.log("imprmiendo n sub cero "+ n[0])
         console.log(n[0].latitude)
+        
 
+        var icon= {
+            url: './icon.png',
+            scaledSize: new google.maps.Size(25, 25), 
+            origin: new google.maps.Point(0,0), 
+            anchor: new google.maps.Point(0, 0) 
+        }
         n.forEach(item => {
          const marker = new window.google.maps.Marker({
              position:{
                  lat:item.latitude,
                  lng:item.longitude,
              },
-             map
+             map,
+             icon: icon
          })
-         marker.addListener('click',() => {
-             
-            popup.open(map, marker)
-         })   
-        })
+           marker.addListener('mouseover',() => {
+           popup.setContent(renderLables(item))
+           popup.open(map, marker)
+         }) 
+
+         marker.addListener('mouseout', ()=> {
+         popup.close();
+        })  
+      })
        
         
-        }
+    }
 
     </script>
 </body>      
