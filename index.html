@@ -19,15 +19,15 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaHJW423r_DZxaPPT5RLrto3UvAFWBhwo"></script>
 
     <script type="module">
-      import styles from './style.js'
+      //import styles from './style.js'
       const $map = document.querySelector("#map");
       const map = new window.google.maps.Map($map, {
         center: {
           lat: 37.09024,
           lng: -95.712891,
         },
-        zoom: 4,
-        styles
+        zoom: 4
+        //styles
       })
 
       renderData()
